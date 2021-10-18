@@ -1,36 +1,34 @@
 # MTG Photoshop Automation
 Photoshop scripting to generate high-quality Magic card renders, inserting Scryfall data into Photoshop frame templates.
 
-Trademark and copyright Wizards of the Coast 2021. Templates for this project include Wizards of the Coast's IP, including: the Beleren font, mana symbols, set icons, background textures, and card text. Templates for this project include the appropriate copyright disclaimers. Read WotC's fan content policy here: https://company.wizards.com/en/legal/fancontentpolicy
-# Example
 ![img1](https://i.imgur.com/4TTvpND.png)
 
 # Requirements
-  * A copy of Photoshop. I tested the system using CS5 and CC 2018, but other versions may work as well.
+  * A copy of Photoshop. I tested the system using CS5 and CC 2015-2020, but other versions may work as well.
   * The Photoshop templates:
-    * [Automated templates](https://drive.google.com/drive/folders/1_8szsVZ6-0Uoxr0XzLcYM6Zjcx89wqYR?usp=sharing) (compatible with this project)
+    * [Automated templates](https://drive.google.com/drive/u/2/folders/1gRZsSM65cDcv0r1hadusojnjQovBfFAN?usp=sharing) (compatible with this project)
     * [Manual templates](https://drive.google.com/drive/folders/1wAH-JKPHa5cPcMcEiyE9q46WH6PEaXnj?usp=sharing) which may also be of interest
   * The following fonts:
     * [Beleren Smallcaps, MPlantin and MPlantin-Italics](https://github.com/magarena/magarena/tree/master/resources/cardbuilder/fonts) and [Beleren2016](https://magic.wizards.com/sites/all/themes/wiz_mtg/fonts/Beleren/Beleren2016-Bold.ttf),
-    * My custom Magic symbols font, NDPMTG,ttf, included in the repo,
+    * My custom Magic symbols font, NDPMTG,ttf, included in the repo
     * [Keyrune](https://keyrune.andrewgioia.com/) and [Mana](https://mana.andrewgioia.com/), for the expansion symbol and transform symbols,
     * Relay Medium and Calibri.
   * [json2.js](https://github.com/douglascrockford/JSON-js), included but you may need to download a more recent version.
-  * A standard installation of [Python 3](https://www.python.org/downloads/).
+  * A standard installation of [Python 3](https://www.python.org/downloads/) (Make sure when you install python to check "Add python to PATH").
 
 # Install and Usage Guide
 * Clone to a folder of your choice, referred to as the *working directory*.
 * Install the included font and the other fonts specified above.
 * Download the Photoshop templates, create a folder called `templates` in the working directory, and extract them into the folder.
 * Create a folder called `art` in the working directory, and another called `out`.
-* Move all of your card artwork to the `art` folder. File names should be structured like `<CARDNAME> (<ARTIST NAME>).jpg`. Artist name is optional - if omitted, it will be retrieved from Scryfall. You can optionally specify the card's set by structuring the file name like `<CARDNAME>$<SET> (<ARTIST NAME>).jpg`.
+* Move all of your card artwork to the `art` folder. File names should be structured like `<CARDNAME> (<ARTIST NAME>).jpg`. Artist name is optional - if omitted, it will be retrieved from Scryfall. You can optionally specify the card's set by structuring the file name like `<CARDNAME>$<SET> (<ARTIST NAME>).jpg`. You can also specify the card's set with `<CARDNAME> [<SET>] (<ARTIST NAME>).jpg`, this will force the template to display the set code and choose the automatic set symbol using the code but NOT use the set code for the scryfall search. You can also include your proxy creator name like so: `<CARDNAME> {<CREATOR NAME>} (<ARTIST NAME>).jpg`. For this to work you need to go into the pohotoshop template and add a text layer called "ProxyCreator" in the Legal group.
 * Run the script `render_all` to render each card in the `art` folder, and store the results in the `out` folder. `render_target` does the same but for a single image.
-* Modify `settings.jsx` to change how the scripts behave - change the expansion symbol; force the system to use a particular template; or force the system to stop before saving your cards and exiting so you can adjust them manually.
+* Modify `settings.jsx` to change how the scripts behave - change the default expansion symbol; force the system to use a particular template; choose whether to use automatic set symbols; choose whether to use a .psd or .psb file; change set symbol size and line shift; or force the system to stop before saving your cards and exiting so you can adjust them manually.
 * **Optional**: Copy the files from `/scripts/utils` to the `Scripts` folder in your Photoshop installation. For me, this was `C:\Program Files\Adobe\Adobe Photoshop CC 2018\Presets\Scripts`. Modify the paths in those files to point to the corresponding files in `/scripts`. This enables the use of a few utility scripts which are handy when making renders manually.
 
 # FAQ
 * *I want to change the set symbol to something else.* Head over to https://andrewgioia.github.io/Keyrune/cheatsheet.html - you can use any of these symbols for the set symbol for your cards. Copy the text of the symbol you want on the cheatsheet, then replace the expansion symbor character in quotations at the top of the file with the character you copied.
-* *I'm getting an error message saying that the Python call failed and `card.json` was not created.* This is a result of the Python command not executing properly on your computer. The error message contains a copy of the command the system attempted - copy this command and try running it from the command line. You may need to adjust the command in `call_python()` in `render.jsx` depending on how your Python installation is configured.
+* *I'm getting an error message saying that the Python call failed and `card.json` was not created.* This is a result of the Python command not executing properly on your computer. The error message contains a copy of the command the system attempted - copy this command and try running it from the command line. You may need to adjust the command in `call_python()` in `render.jsx` depending on how your Python installation is configured. The line that says `/usr/local/bin/python3` will either need to be changed to `python` or `py` OR when you setup Python you didn't set up the path variable. Try installing python from the microsoft store which will automatically setup a path variable, or reinstall python and make sure that option is checked during setup.
 
 # Scope
 * Modern style cards, normal and extended; transform and mdfc, front and back; basic lands, normal, Theros, and Unstable styles; planeswalkers, normal and extended; mutate, adventure, miracle, and snow cards; and various flavours of fancy frames - stargazing, universes beyond, masterpiece, ZNE expedition, and womensday.
