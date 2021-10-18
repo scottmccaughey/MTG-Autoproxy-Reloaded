@@ -51,6 +51,20 @@ var BaseTemplate = Class({
 
         this.art_layer = app.activeDocument.layers.getByName(default_layer);
         this.legal = app.activeDocument.layers.getByName(LayerNames.LEGAL);
+		
+		// MY STUFF -- Redundancy
+		if ( this.layout.set == "" || this.layout.set == null ) this.layout.set = "MTG";
+		if ( this.layout.set.length > 3 ) this.layout.set = this.layout.set.substring(1);
+		
+		// MY STUFF -- If automatic set symbol enabled, redefine set symbol
+		var auto_set_symbol = null;
+		if ( automatic_set_symbol == true ) var auto_set_symbol = generate_set_symbol ( this.layout.set );
+		if ( auto_set_symbol !== null ) expansion_symbol_character = auto_set_symbol;
+		
+		// MY STUFF -- If creator is specified, add the name
+		if ( this.layout.creator != null && this.layout.creator != "" ) try { this.legal.layers.getByName("ProxyCreator").textItem.contents = this.layout.creator; } catch (e) {}
+		
+		this.legal.layers.getByName("Set").textItem.contents = this.layout.set.toUpperCase() + this.legal.layers.getByName("Set").textItem.contents;
         this.text_layers = [
             new TextField(
                 layer = this.legal.layers.getByName(LayerNames.ARTIST),
@@ -79,8 +93,8 @@ var BaseTemplate = Class({
         /**
          * Opens the template's PSD file in Photoshop.
          */
-
-        var template_path = file_path + "/templates/" + this.template_file_name() + ".psd"
+		
+        var template_path = file_path + "/templates/" + this.template_file_name() + file_extension;
         var template_file = new File(template_path);
         try {
             app.open(template_file);
@@ -207,6 +221,8 @@ var ChilliBaseTemplate = Class({
                 layer = expansion_symbol,
                 text_contents = expansion_symbol_character,
                 rarity = this.layout.rarity,
+				size = expansion_symbol_size,
+				shift = expansion_symbol_shift
             ),
             new ScaledTextField(
                 layer = type_line_selected,
@@ -303,7 +319,7 @@ var NormalTemplate = Class({
                     reference_layer = text_and_icons.layers.getByName(LayerNames.TEXTBOX_REFERENCE),
                 ),
             );
-
+			
             power_toughness.visible = false;
         }
     },
@@ -366,6 +382,14 @@ var NormalTemplate = Class({
             // legendary crown on nyx background - enable the hollow crown shadow and layer mask on crown, pinlines, and shadows
             this.enable_hollow_crown(crown, pinlines);
         }
+		
+		// Hide top border if legendary
+		if ((this.is_legendary && this.layout.silvan) && this.layout.silvan == true ) {
+			var docref = app.activeDocument;
+			docref.activeLayer = docref.layers.getByName('Background');
+			enable_active_layer_mask();
+		}
+		
     },
 });
 
@@ -375,7 +399,7 @@ var NormalClassicTemplate = Class({
     /**
      * A template for 7th Edition frame. Each frame is flattened into its own singular layer.
      */
-
+	
     extends_: ChilliBaseTemplate,
     template_file_name: function () {
         return "normal-classic";
@@ -384,6 +408,11 @@ var NormalClassicTemplate = Class({
         return "Classic";
     },
     constructor: function (layout, file, file_path) {
+		
+		// MY STUFF - change expansion symbol size and shift for this template specifically ?
+		//expansion_symbol_size = 10;
+		//expansion_symbol_shift = 2;
+		
         this.super(layout, file, file_path);
 
         var docref = app.activeDocument;
@@ -461,6 +490,79 @@ var NormalExtendedTemplate = Class({
         layout.oracle_text = strip_reminder_text(layout.oracle_text);
         this.super(layout, file, file_path);
     }
+});
+
+/* MY STUFF - Silvan extended template */
+
+var SilvanExtendedTemplate = Class({
+    /**
+     * An extended-art version of the normal template. The layer structure of this template and NormalTemplate are identical.
+     */
+
+    extends_: NormalTemplate,
+    template_file_name: function () {
+        return "silvan-extended";
+    },
+    template_suffix: function () {
+        return "Extended";
+    },
+    constructor: function (layout, file, file_path) {
+        // strip out reminder text for extended cards
+        layout.oracle_text = strip_reminder_text(layout.oracle_text);
+		layout.silvan = true;
+		
+        this.super(layout, file, file_path);
+    },
+});
+
+/* Templates similar to NormalTemplate but with aesthetic differences */
+
+var NormalFullArtTemplate = Class({
+    /**
+     * The showcase template first used on the Women's Day Secret Lair. The layer structure of this template and NormalTemplate are
+     * similar, but this template doesn't have any background layers, and a layer mask on the pinlines group needs to be enabled when
+     * the card is legendary.
+     */
+
+    extends_: NormalTemplate,
+    template_file_name: function () {
+        return "normal-full-art";
+    },
+    template_suffix: function () {
+        return "Full Art";
+    },
+    constructor: function (layout, file, file_path) {
+        // strip out reminder text
+        layout.oracle_text = strip_reminder_text(layout.oracle_text);
+        this.super(layout, file, file_path);
+		
+    },
+    enable_frame_layers: function () {
+        var docref = app.activeDocument;
+		
+        // twins and pt box
+        var twins = docref.layers.getByName(LayerNames.TWINS);
+        twins.layers.getByName(this.layout.twins).visible = true;
+        if (this.is_creature) {
+            var pt_box = docref.layers.getByName(LayerNames.PT_BOX);
+            pt_box.layers.getByName(this.layout.twins).visible = true;
+        }
+
+        // pinlines
+        var pinlines = docref.layers.getByName(LayerNames.PINLINES_TEXTBOX);
+        if (this.is_land) {
+            pinlines = docref.layers.getByName(LayerNames.LAND_PINLINES_TEXTBOX);
+        }
+        pinlines.layers.getByName(this.layout.pinlines).visible = true;
+
+        if (this.is_legendary) {
+            // legendary crown
+            var crown = docref.layers.getByName(LayerNames.LEGENDARY_CROWN);
+            crown.layers.getByName(this.layout.pinlines).visible = true;
+            docref.activeLayer = pinlines;
+            enable_active_layer_mask();
+        }
+    },
 });
 
 var WomensDayTemplate = Class({
@@ -1353,6 +1455,17 @@ var BasicLandTherosTemplate = Class({
     template_file_name: function () {
         return "basic-theros";
     },
+	// Use custom expansion symbol -- MY STUFF
+	constructor: function (layout, file, file_path) {
+        this.super(layout, file, file_path);
+		this.text_layers = this.text_layers.concat([
+            new ExpansionSymbolField(
+                layer = app.activeDocument.layers.getByName("Expansion Symbol"),
+                text_contents = expansion_symbol_character,
+                rarity = "common"
+			)
+		]);
+	}
 });
 
 var BasicLandUnstableTemplate = Class({
@@ -1375,4 +1488,17 @@ var BasicLandClassicTemplate = Class({
     template_file_name: function () {
         return "basic-classic";
     },
+	// Use custom expansion symbol -- MY STUFF
+	constructor: function (layout, file, file_path) {
+        this.super(layout, file, file_path);
+		this.text_layers = this.text_layers.concat([
+            new ExpansionSymbolField(
+                layer = app.activeDocument.layers.getByName("Expansion Symbol"),
+                text_contents = expansion_symbol_character,
+                rarity = "common",
+				size = 9, // Change this to resize symbol
+				shift = 2 // Change this to add space before symbol (placement)
+			)
+		]);
+	}
 });

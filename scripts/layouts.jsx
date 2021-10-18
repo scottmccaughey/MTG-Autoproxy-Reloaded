@@ -45,6 +45,11 @@ var BaseLayout = Class({
 
         this.rarity = this.scryfall.rarity;
         this.artist = this.scryfall.artist;
+		
+		//ADD SET, MY STUFF
+		if ( this.set != "MTG" ) this.set = this.scryfall.set;
+		if ( this.set == "" || this.set == null ) this.set = "MTG";
+		
         this.colour_identity = this.scryfall.color_identity;
         this.keywords = [];
         if (this.scryfall.keywords !== undefined) {

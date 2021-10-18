@@ -14,10 +14,22 @@ function retrieve_card_name_and_artist(file) {
 
     var open_index = filename_no_ext.lastIndexOf(" (");
     var close_index = filename_no_ext.lastIndexOf(")");
+	
+	// MY STUFF - Check for set and creator
+	var open_index_set = filename_no_ext.lastIndexOf(" [");
+    var close_index_set = filename_no_ext.lastIndexOf("]");
+	var open_index_creator = filename_no_ext.lastIndexOf(" {");
+    var close_index_creator = filename_no_ext.lastIndexOf("}");
 
     var card_name = filename_no_ext;
     var artist = "";
-
+	
+	// MY STUFF - See if the file name has a set defined
+	var set = "";
+	var creator = "";
+	if (open_index_set > 0 && close_index_set > 0) set = filename_no_ext.slice(open_index_set + 2, close_index_set);
+	if (open_index_creator > 0 && close_index_creator > 0) creator = filename_no_ext.slice(open_index_creator + 2, close_index_creator);
+	
     if (open_index > 0 && close_index > 0) {
         // File name includes artist name - slice and dice
         artist = filename_no_ext.slice(open_index + 2, close_index);
@@ -27,6 +39,8 @@ function retrieve_card_name_and_artist(file) {
     return {
         card_name: card_name,
         artist: artist,
+		set: set,
+		creator: creator
     }
 }
 
@@ -40,7 +54,7 @@ function call_python(card_name, file_path) {
     var python_command = "python \"" + file_path + "/scripts/get_card_info.py\" \"" + card_name + "\"";
     if ($.os.search(/windows/i) === -1) {
         // macOS
-        python_command = "/usr/local/bin/python3 \"" + file_path + "/scripts/get_card_info.py\" \"" + card_name + "\" >> " + file_path + "/scripts/debug.log 2>&1";
+        python_command = "/usr/local/bin/py \"" + file_path + "/scripts/get_card_info.py\" \"" + card_name + "\" >> " + file_path + "/scripts/debug.log 2>&1";
     }
     app.system(python_command);
 
@@ -71,10 +85,12 @@ function select_template(layout, file, file_path) {
         other: [
             NormalClassicTemplate,
             NormalExtendedTemplate,
+            SilvanExtendedTemplate,
             WomensDayTemplate,
             StargazingTemplate,
             MasterpieceTemplate,
             ExpeditionTemplate,
+			NormalFullArtTemplate //MY STUFF
         ],
     };
     class_template_map[transform_front_class] = {
@@ -165,6 +181,7 @@ function render(file) {
             name: card_name,
             card_class: basic_class,
         };
+		
     } else {
         var scryfall = call_python(card_name, file_path);
         var layout_name = scryfall.layout;
@@ -177,11 +194,22 @@ function render(file) {
         }
 
         // if artist specified in file name, insert the specified artist into layout obj
-        if (artist !== "") {
-            layout.artist = artist;
-        }
+        if (artist !== "") layout.artist = artist;
+		
     }
-
+	
+	// If artist isn't defined set Unknown -- MY STUFF
+	if (layout.artist == "" || layout.artist == null) layout.artist = "Unknown";
+	
+	// Include setcode -- MY STUFF
+	if (ret.set) layout.set = ret.set;
+	else if (scryfall) layout.set = scryfall.set;
+	else layout.set = "MTG";
+	
+	// Include creator -- MY STUFF
+	if (ret.creator) layout.creator = ret.creator;
+	else layout.creator = null;
+	
     // select and execute the template - insert text fields, set visibility of layers, etc. - and save to disk
     var file_name = select_template(layout, file, file_path).execute();
     if (exit_early) {

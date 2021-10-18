@@ -163,11 +163,15 @@ var ExpansionSymbolField = Class({
      * one of which will need to be enabled according to the card's rarity. A 6 px outer stroke should be applied to the layer as well, white if 
      * the card is of common rarity and black otherwise.
      */
-
+	
     extends_: TextField,
-    constructor: function (layer, text_contents, rarity) {
+    constructor: function (layer, text_contents, rarity, size, shift) {
         this.super(layer, text_contents, rgb_black());
-
+		
+		// MAKE DAMN SURE size IS DEFINED and not NULL -- MY STUFF
+		if (size) { if ( size !== null ) this.size = size; }
+		else this.size = null;
+		
         this.rarity = rarity;
         if (rarity === rarity_bonus || rarity === rarity_special) {
             this.rarity = rarity_mythic;
@@ -175,9 +179,16 @@ var ExpansionSymbolField = Class({
     },
     execute: function () {
         this.super();
-
+		
         var stroke_weight = 6;  // pixels
         app.activeDocument.activeLayer = this.layer;
+				
+		//Change size and baseline shift -- MY STUFF
+		if (this.size !== null && this.size !== undefined) {
+			app.activeDocument.activeLayer.textItem.size = size;
+			app.activeDocument.activeLayer.textItem.baselineShift = shift;
+		}
+		
         if (this.rarity === rarity_common) {
             apply_stroke(stroke_weight, rgb_white());
         } else {
@@ -185,6 +196,7 @@ var ExpansionSymbolField = Class({
             mask_layer.visible = true;
             apply_stroke(stroke_weight, rgb_black());
         }
+		
     }
 })
 
