@@ -136,7 +136,13 @@ var TransformLayout = Class({
         this.toughness = this.scryfall.card_faces[this.face].toughness;
         this.other_face_toughness = this.scryfall.card_faces[this.other_face].toughness;
         this.colour_indicator = this.scryfall.card_faces[this.face].color_indicator;
-        this.transform_icon = this.scryfall.frame_effects[0];  // TODO: safe to assume the first frame effect will be the transform icon?
+		
+		// MY STUFF -- frame_effects not supported on new MID cards?
+		// TODO: safe to assume the first frame effect will be the transform icon?
+        if ( this.scryfall.frame_effects !== undefined ) { 
+			if ( this.scryfall.frame_effects[0] != "legendary" ) this.transform_icon = this.scryfall.frame_effects[0];
+			else this.transform_icon = "sunmoondfc";
+		} else this.transform_icon = "sunmoondfc";
 
         this.scryfall_scan = this.scryfall.card_faces[this.face].image_uris.large;
     },
