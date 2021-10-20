@@ -1,7 +1,7 @@
 # MTG Photoshop Automation
 Photoshop scripting to generate high-quality Magic card renders, inserting Scryfall data into Photoshop frame templates.
 
-![img1](https://i.imgur.com/4TTvpND.png)
+![img1](https://i.ibb.co/sCGWFNk/Mind-Flayer-Extended.png)
 
 # Requirements
   * A copy of Photoshop. I tested the system using CS5 and CC 2015-2020, but other versions may work as well.
