@@ -14,6 +14,8 @@ var specified_template = null;
 //var specified_template = SnowTemplate // Snow 
 //var specified_template = StargazingTemplate // Nyx stargazing secret lair
 //var specified_template = ExpeditionTemplate // Zendikar Rising expedition template
+//var specified_template = NormalClassicTemplate // Classic mtg frame
+//var specified_template = BasicLandClassicTemplate // Classic mtg frame for basics
 
 // MY STUFF -- File extension, change to PSB for Silvan template
 var file_extension = ".psd";
