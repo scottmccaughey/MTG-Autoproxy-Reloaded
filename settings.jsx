@@ -1,18 +1,23 @@
 #include "scripts/templates.jsx";
 
 // Expansion symbol - characters copied from Keyrune cheatsheet
-var expansion_symbol_character = "";  // Cube
-//var expansion_symbol_character = "";  // (M)
+var expansion_symbol_character = "";  // M
+//var expansion_symbol_character = "";  // Cube
 
 // Specify a template to use (if the card's layout is compatible) rather than the default template
 var specified_template = null;
-//var specified_template = SilvanExtendedTemplate;
-//var specified_template = NormalExtendedTemplate;
-//var specified_template = NormalFullArtTemplate;
+//var specified_template = SilvanExtendedTemplate; // Looks like WillieTanner proxies
+//var specified_template = NormalExtendedTemplate; // Chilli extended template
+//var specified_template = NormalFullArtTemplate; // Modified extended template to be full art
+//var specified_template = WomensDayTemplate // Secret lair fullart
+//var specified_template = MasterpieceTemplate // Hour of devastation masterpiece invocations
+//var specified_template = SnowTemplate // Snow 
+//var specified_template = StargazingTemplate // Nyx stargazing secret lair
+//var specified_template = ExpeditionTemplate // Zendikar Rising expedition template
 
 // MY STUFF -- File extension, change to PSB for Silvan template
-file_extension = ".psd";
-//file_extension = ".psb";
+var file_extension = ".psd";
+//var file_extension = ".psb";
 
 // Specify whether to end the script when the card is finished being formatted (for manual intervention)
 var exit_early = false;
