@@ -180,12 +180,23 @@ function format_symbol(primary_action_list, starting_layer_ref, symbol_index, sy
         desc2.putUnitDouble(idLdng, idPnt, layer_font_size);
         idClr = charIDToTypeID("Clr ");
         desc3 = new ActionDescriptor();
+		/*
+		idRd = charIDToTypeID("Rd  ");
+        desc3.putDouble(idRd, symbol_colours[i].rgb.red);  // rgb value.red
+        idGrn = charIDToTypeID("Grn ");
+        desc3.putDouble(idGrn, symbol_colours[i].rgb.green);  // rgb value.green
+        idBl = charIDToTypeID("Bl  ");
+        desc3.putDouble(idBl, symbol_colours[i].rgb.blue);  // rgb value.blue
+		*/
+		
         idRd = charIDToTypeID("Rd  ");
         desc3.putDouble(idRd, symbol_colours[i].rgb.red);  // rgb value.red
         idGrn = charIDToTypeID("Grn ");
         desc3.putDouble(idGrn, symbol_colours[i].rgb.green);  // rgb value.green
         idBl = charIDToTypeID("Bl  ");
         desc3.putDouble(idBl, symbol_colours[i].rgb.blue);  // rgb value.blue
+		
+		
         idRGBC = charIDToTypeID("RGBC");
         desc2.putObject(idClr, idRGBC, desc3);
         idTxtS = charIDToTypeID("TxtS");
@@ -224,6 +235,7 @@ function format_text(input_string, italics_strings, flavour_index, is_centred) {
     // Prepare action descriptor and reference variables
     var layer_font_size = app.activeDocument.activeLayer.textItem.size;
     var layer_text_colour = app.activeDocument.activeLayer.textItem.color;
+	//var layer_text_colour = rgb_grey();
     var desc119 = new ActionDescriptor();
     idnull = charIDToTypeID("null");
     var ref101 = new ActionReference();
@@ -294,7 +306,31 @@ function format_text(input_string, italics_strings, flavour_index, is_centred) {
         idPnt = charIDToTypeID("#Pnt");
         desc126.putUnitDouble(idLdng, idPnt, layer_font_size);
         idTxtS = charIDToTypeID("TxtS");
+		//Added
+		var idClr = charIDToTypeID("Clr ");
+		descTemp = new ActionDescriptor();
+		var idRd = charIDToTypeID("Rd  ");
+		/*
+		// GREY
+		descTemp.putDouble(idRd, 170);  // text colour.red
+		var idGrn = charIDToTypeID("Grn ");
+		descTemp.putDouble(idGrn, 170);  // text colour.green
+		var idBl = charIDToTypeID("Bl  ");
+		descTemp.putDouble(idBl, 170);  // text colour.blue
+*/
+
+		//Default text box
+		descTemp.putDouble(idRd, layer_text_colour.rgb.red);  // text colour.red
+		var idGrn = charIDToTypeID("Grn ");
+		descTemp.putDouble(idGrn, layer_text_colour.rgb.green);  // text colour.green
+		var idBl = charIDToTypeID("Bl  ");
+		descTemp.putDouble(idBl, layer_text_colour.rgb.blue);  // text colour.blue
+
+		var idRGBC = charIDToTypeID("RGBC");
+		desc126.putObject( idClr, idRGBC, descTemp );
+		//End
         desc125.putObject(idTxtS, idTxtS, desc126);
+
         current_layer_ref = desc125;
     }
 
@@ -495,7 +531,7 @@ function generate_italics(card_text) {
     for (var i = 0; i < ability_words.length; i++) {
         italic_text.push(ability_words[i] + " \u2014");  // Include em dash
     }
-
+	//italic_text.color = rgb_grey()
     return italic_text;
 }
 
@@ -508,5 +544,6 @@ function format_text_wrapper() {
 
     var card_text = app.activeDocument.activeLayer.textItem.contents;
     var italic_text = generate_italics(card_text);
+	italic_text.color = rgb_grey();
     format_text(card_text, italic_text, -1, false);
 }

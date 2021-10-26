@@ -180,7 +180,8 @@ var ExpansionSymbolField = Class({
     execute: function () {
         this.super();
 		
-        var stroke_weight = 6;  // pixels
+		// MY STUFF - Put it into settings
+        //var stroke_weight = 6;  // pixels
         app.activeDocument.activeLayer = this.layer;
 				
 		//Change size and baseline shift -- MY STUFF
@@ -190,11 +191,11 @@ var ExpansionSymbolField = Class({
 		}
 		
         if (this.rarity === rarity_common) {
-            apply_stroke(stroke_weight, rgb_white());
+            apply_stroke(expansion_symbol_stroke_weight, rgb_white());
         } else {
             var mask_layer = this.layer.parent.layers.getByName(this.rarity);
             mask_layer.visible = true;
-            apply_stroke(stroke_weight, rgb_black());
+            apply_stroke(expansion_symbol_stroke_weight, rgb_black());
         }
 		
     }

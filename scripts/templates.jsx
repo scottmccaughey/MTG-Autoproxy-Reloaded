@@ -753,6 +753,32 @@ var SnowTemplate = Class({
     },
 });
 
+var SketchTemplate = Class({
+    /**
+     * The sketch showcase from Modern Horizons 2. The layer structure of this template and NormalTemplate are nearly identical.
+     */
+
+    extends_: NormalTemplate,
+    template_file_name: function () {
+        return "sketch-template";
+    },
+	template_suffix: function () {
+        return "Sketch";
+    },
+    constructor: function (layout, file, file_path) {
+		this.super(layout, file, file_path);
+        
+    },
+	enable_frame_layers: function () {
+        this.super();
+		var doc_ref = app.activeDocument;
+		var text_group = doc_ref.layers.getByName(LayerNames.TEXT_AND_ICONS);
+		if ( this.layout.rarity != "common" ) {
+			text_group.layers.getByName("common").visible = false;
+		}
+	}
+});
+
 var MiracleTemplate = new Class({
     /**
      * A template for miracle cards. The layer structure of this template and NormalTemplate are close to identical, but this

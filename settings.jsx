@@ -12,6 +12,7 @@ var specified_template = null;
 //var specified_template = WomensDayTemplate // Secret lair fullart
 //var specified_template = MasterpieceTemplate // Hour of devastation masterpiece invocations
 //var specified_template = SnowTemplate // Snow 
+//var specified_template = SketchTemplate // MH2 Sketch template 
 //var specified_template = StargazingTemplate // Nyx stargazing secret lair
 //var specified_template = ExpeditionTemplate // Zendikar Rising expedition template
 //var specified_template = NormalClassicTemplate // Classic mtg frame
@@ -29,9 +30,11 @@ var exit_early = false;
 //var automatic_set_symbol = false;
 var automatic_set_symbol = true;
 
-// Manually set size and line shift to position set symbol, useful for classic templates
+// Manually set size, line shift to position set symbol, useful for classic templates
+// Manually set stroke weight for thicker or thinner outline
 var expansion_symbol_size = null; // 9 or 10 -- Tested for some
 var expansion_symbol_shift = null; // 2 -- Tested for some
+var expansion_symbol_stroke_weight = 6;
 
 // Function to automatically choose set symbol
 function generate_set_symbol ( set ) {
