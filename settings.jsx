@@ -9,14 +9,14 @@ var specified_template = null;
 //var specified_template = SilvanExtendedTemplate; // Looks like WillieTanner proxies
 //var specified_template = NormalExtendedTemplate; // Chilli extended template
 //var specified_template = NormalFullArtTemplate; // Modified extended template to be full art
-//var specified_template = WomensDayTemplate // Secret lair fullart
-//var specified_template = MasterpieceTemplate // Hour of devastation masterpiece invocations
-//var specified_template = SnowTemplate // Snow 
-//var specified_template = SketchTemplate // MH2 Sketch template 
-//var specified_template = StargazingTemplate // Nyx stargazing secret lair
-//var specified_template = ExpeditionTemplate // Zendikar Rising expedition template
-//var specified_template = NormalClassicTemplate // Classic mtg frame
-//var specified_template = BasicLandClassicTemplate // Classic mtg frame for basics
+//var specified_template = WomensDayTemplate; // Secret lair fullart
+//var specified_template = MasterpieceTemplate; // Hour of devastation masterpiece invocations
+//var specified_template = SnowTemplate; // Snow 
+//var specified_template = SketchTemplate; // MH2 Sketch template 
+//var specified_template = StargazingTemplate; // Nyx stargazing secret lair
+//var specified_template = ExpeditionTemplate; // Zendikar Rising expedition template
+//var specified_template = NormalClassicTemplate; // Classic mtg frame
+//var specified_template = BasicLandClassicTemplate; // Classic mtg frame for basics
 
 // MY STUFF -- File extension, change to PSB for Silvan template
 var file_extension = ".psd";
