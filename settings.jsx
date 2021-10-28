@@ -17,6 +17,8 @@ var specified_template = null;
 //var specified_template = ExpeditionTemplate; // Zendikar Rising expedition template
 //var specified_template = NormalClassicTemplate; // Classic mtg frame
 //var specified_template = BasicLandClassicTemplate; // Classic mtg frame for basics
+//var specified_template = MiracleTemplate; // Miracle frame ex: Temporal Mastery
+//var specified_template = KaldheimTemplate;
 
 // MY STUFF -- File extension, change to PSB for Silvan template
 var file_extension = ".psd";
@@ -35,6 +37,10 @@ var automatic_set_symbol = true;
 var expansion_symbol_size = null; // 9 or 10 -- Tested for some
 var expansion_symbol_shift = null; // 2 -- Tested for some
 var expansion_symbol_stroke_weight = 6;
+
+// Remove the flavour text
+var remove_flavour_text = false;
+//var remove_flavour_text = true;
 
 // Function to automatically choose set symbol
 function generate_set_symbol ( set ) {

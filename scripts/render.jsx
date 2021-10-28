@@ -91,7 +91,8 @@ function select_template(layout, file, file_path) {
             MasterpieceTemplate,
             ExpeditionTemplate,
 			NormalFullArtTemplate, //MY STUFF
-			SketchTemplate
+			SketchTemplate,
+			KaldheimTemplate //MY STUFF
         ],
     };
     class_template_map[transform_front_class] = {
@@ -198,6 +199,9 @@ function render(file) {
         if (artist !== "") layout.artist = artist;
 		
     }
+	
+	// Remove flavour text? -- MY STUFF
+	if ( remove_flavour_text == true ) layout.flavour_text = "";
 	
 	// If artist isn't defined set Unknown -- MY STUFF
 	if (layout.artist == "" || layout.artist == null) layout.artist = "Unknown";

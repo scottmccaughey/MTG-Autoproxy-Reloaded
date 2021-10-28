@@ -383,7 +383,7 @@ var NormalTemplate = Class({
             this.enable_hollow_crown(crown, pinlines);
         }
 		
-		// Hide top border if legendary
+		// Hide top border if legendary -- MY STUFF for Silvan template
 		if ((this.is_legendary && this.layout.silvan) && this.layout.silvan == true ) {
 			var docref = app.activeDocument;
 			docref.activeLayer = docref.layers.getByName('Background');
@@ -755,12 +755,13 @@ var SnowTemplate = Class({
 
 var SketchTemplate = Class({
     /**
+	 * -- MY STUFF --
      * The sketch showcase from Modern Horizons 2. The layer structure of this template and NormalTemplate are nearly identical.
      */
 
     extends_: NormalTemplate,
     template_file_name: function () {
-        return "sketch-template";
+        return "sketch";
     },
 	template_suffix: function () {
         return "Sketch";
@@ -777,6 +778,155 @@ var SketchTemplate = Class({
 			text_group.layers.getByName("common").visible = false;
 		}
 	}
+});
+
+var KaldheimTemplate = Class({
+    /**
+     * -- MY STUFF --
+	 * Kaldheim viking legendary showcase.
+     */
+
+    extends_: ChilliBaseTemplate,
+    template_file_name: function () {
+        return "kaldheim";
+    },
+	template_suffix: function () {
+        return "Kaldheim";
+    },
+    rules_text_and_pt_layers: function (text_and_icons) {
+        /**
+         * Set up the card's rules text and power/toughness according to whether or not the card is a creature.
+         * You're encouraged to override this method if a template extending this one doesn't have the option for
+         * creating creature cards (e.g. miracles).
+         */
+
+        // centre the rules text if the card has no flavour text, text is all on one line, and that line is fairly short
+        var is_centred = this.layout.flavour_text.length <= 1 && this.layout.oracle_text.length <= 70 && this.layout.oracle_text.indexOf("\n") < 0;
+
+        var noncreature_copyright = this.legal.layers.getByName(LayerNames.NONCREATURE_COPYRIGHT);
+        var creature_copyright = this.legal.layers.getByName(LayerNames.CREATURE_COPYRIGHT);
+
+        var power_toughness = text_and_icons.layers.getByName(LayerNames.POWER_TOUGHNESS);
+        if (this.is_creature) {
+            // creature card - set up creature layer for rules text and insert power & toughness
+            var rules_text = text_and_icons.layers.getByName(LayerNames.RULES_TEXT_CREATURE);
+            this.text_layers = this.text_layers.concat([
+                new TextField(
+                    layer = power_toughness,
+                    text_contents = this.layout.power.toString() + "/" + this.layout.toughness.toString(),
+                    text_colour = get_text_layer_colour(power_toughness),
+                ),
+                new CreatureFormattedTextArea(
+                    layer = rules_text,
+                    text_contents = this.layout.oracle_text,
+                    text_colour = get_text_layer_colour(rules_text),
+                    flavour_text = this.layout.flavour_text,
+                    is_centred = is_centred,
+                    reference_layer = text_and_icons.layers.getByName(LayerNames.TEXTBOX_REFERENCE),
+                    pt_reference_layer = text_and_icons.layers.getByName(LayerNames.PT_REFERENCE),
+                    pt_top_reference_layer = text_and_icons.layers.getByName(LayerNames.PT_TOP_REFERENCE),
+                ),
+            ]);
+
+            noncreature_copyright.visible = false;
+            creature_copyright.visible = true;
+        } else {
+            // noncreature card - use the normal rules text layer and disable the power/toughness layer
+            var rules_text = text_and_icons.layers.getByName(LayerNames.RULES_TEXT_NONCREATURE);
+            this.text_layers.push(
+                new FormattedTextArea(
+                    layer = rules_text,
+                    text_contents = this.layout.oracle_text,
+                    text_colour = get_text_layer_colour(rules_text),
+                    flavour_text = this.layout.flavour_text,
+                    is_centred = is_centred,
+                    reference_layer = text_and_icons.layers.getByName(LayerNames.TEXTBOX_REFERENCE),
+                ),
+            );
+			
+            power_toughness.visible = false;
+        }
+    },
+    constructor: function (layout, file, file_path) {
+        this.super(layout, file, file_path);
+
+        var docref = app.activeDocument;
+
+        this.art_reference = docref.layers.getByName(LayerNames.ART_FRAME);
+        if (this.layout.is_colourless) this.art_reference = docref.layers.getByName(LayerNames.FULL_ART_FRAME);
+
+        this.name_shifted = this.layout.transform_icon !== null && this.layout.transform_icon !== undefined;
+        this.type_line_shifted = this.layout.colour_indicator !== null && this.layout.colour_indicator !== undefined;
+
+        var text_and_icons = docref.layers.getByName(LayerNames.TEXT_AND_ICONS);
+        this.basic_text_layers(text_and_icons);
+        this.rules_text_and_pt_layers(text_and_icons);
+    },
+    enable_frame_layers: function () {
+        var docref = app.activeDocument;
+
+        // PT Box, no title boxes for this one
+        if (this.is_creature) {
+            var pt_box = docref.layers.getByName(LayerNames.PT_BOX);
+			// Check if vehicle
+			if (this.layout.type_line.slice(-7) == "Vehicle") pt_box.layers.getByName("Vehicle").visible = true;
+            else pt_box.layers.getByName(this.layout.twins).visible = true;
+        } else docref.layers.getByName(LayerNames.PT_BOX).visible = false;
+		
+		// pinlines
+        var pinlines = docref.layers.getByName(LayerNames.PINLINES_TEXTBOX);
+        if (this.is_land) {
+			
+			// Change to land group
+			pinlines = docref.layers.getByName(LayerNames.LAND_PINLINES_TEXTBOX);
+			
+			// Check if vehicle
+            if (this.layout.type_line.slice(-7) == "Vehicle") pinlines.layers.getByName("Vehicle").visible = true;
+			else pinlines.layers.getByName(this.layout.pinlines).visible = true;
+			
+        } else {
+			
+			// Check if vehicle
+			if (this.layout.type_line.slice(-7) == "Vehicle") pinlines.layers.getByName("Vehicle").visible = true;
+			else pinlines.layers.getByName(this.layout.pinlines).visible = true;
+			
+		}
+		
+        /* No background for this one
+        var background = docref.layers.getByName(LayerNames.BACKGROUND);
+        if (this.layout.is_nyx) {
+            background = docref.layers.getByName(LayerNames.NYX);
+        }
+        background.layers.getByName(this.layout.background).visible = true;*/
+
+       /* if (this.is_legendary) {
+            // legendary crown
+            var crown = docref.layers.getByName(LayerNames.LEGENDARY_CROWN);
+            crown.layers.getByName(this.layout.pinlines).visible = true;
+            border = docref.layers.getByName(LayerNames.BORDER);
+            border.layers.getByName(LayerNames.NORMAL_BORDER).visible = false;
+            border.layers.getByName(LayerNames.LEGENDARY_BORDER).visible = true;
+        }
+
+        if (this.is_companion) {
+            // enable companion texture
+            var companion = docref.layers.getByName(LayerNames.COMPANION);
+            companion.layers.getByName(this.layout.pinlines).visible = true;
+        }
+
+        if ((this.is_legendary && this.layout.is_nyx) || this.is_companion) {
+            // legendary crown on nyx background - enable the hollow crown shadow and layer mask on crown, pinlines, and shadows
+            this.enable_hollow_crown(crown, pinlines);
+        }
+		
+		// Hide top border if legendary -- silvan
+		if ((this.is_legendary && this.layout.silvan) && this.layout.silvan == true ) {
+			var docref = app.activeDocument;
+			docref.activeLayer = docref.layers.getByName('Background');
+			enable_active_layer_mask();
+		}*/
+		
+    },
 });
 
 var MiracleTemplate = new Class({
