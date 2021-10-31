@@ -1,0 +1,8 @@
+.DS_Store
+
+art
+out
+templates
+
+scripts/card.json
+scripts/debug.log

@@ -1,7 +1,7 @@
 #include "scripts/templates.jsx";
 
 // Expansion symbol - characters copied from Keyrune cheatsheet
-var expansion_symbol_character = "";  // M
+var expansion_symbol_character = "";  // M
 //var expansion_symbol_character = "";  // Cube
 
 // Specify a template to use (if the card's layout is compatible) rather than the default template
@@ -11,8 +11,8 @@ var specified_template = null;
 //var specified_template = NormalFullArtTemplate; // Modified extended template to be full art
 //var specified_template = WomensDayTemplate; // Secret lair fullart
 //var specified_template = MasterpieceTemplate; // Hour of devastation masterpiece invocations
-//var specified_template = SnowTemplate; // Snow 
-//var specified_template = SketchTemplate; // MH2 Sketch template 
+//var specified_template = SnowTemplate; // Snow
+//var specified_template = SketchTemplate; // MH2 Sketch template
 //var specified_template = StargazingTemplate; // Nyx stargazing secret lair
 //var specified_template = ExpeditionTemplate; // Zendikar Rising expedition template
 //var specified_template = NormalClassicTemplate; // Classic mtg frame
@@ -44,9 +44,9 @@ var remove_flavour_text = false;
 
 // Function to automatically choose set symbol
 function generate_set_symbol ( set ) {
-	
+
 	set = set.toUpperCase();
-	
+
 	if ( set == "LEA" ) var output = "";
 	else if ( set == "LEB" ) var output = "";
 	else if ( set == "2ED" ) var output = "";
@@ -280,9 +280,9 @@ function generate_set_symbol ( set ) {
 	else if ( set == "DCI" ) var output = ""; //Judge Promo
 	else if ( set == "VOW" ) var output = null;
 	else var output = null;
-	
+
 	if ( output == "" ) output = null;
-	
+
 	return output;
-	
+
 }
